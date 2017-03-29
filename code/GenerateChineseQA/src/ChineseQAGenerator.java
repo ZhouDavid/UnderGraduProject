@@ -19,7 +19,7 @@ import java.util.Properties;
 
 public class ChineseQAGenerator {
     //public String []
-    public final String basedir = "E:\\Graduation-Project\\dataset\\stanford-segmenter-2016-10-31\\data";
+    public final String basedir = "E:\\UnderGraduProject\\dataset\\stanford-segmenter-2016-10-31\\data";
     Properties props = new Properties();
     CRFClassifier<CoreLabel> segmenter;
     List<String> contexts = new ArrayList<>();
@@ -90,9 +90,10 @@ public class ChineseQAGenerator {
         FileWriter fw  = new FileWriter(fileName);
         BufferedWriter bw = new BufferedWriter(fw);
         JSONArray cs = new JSONArray();
+        int id = 0;
         for(int i = 0;i<qas.size();i++){
             JSONObject c = new JSONObject();
-            c.put("context",qas.get(i).context);
+            c.put("context",qas.get(i).seged_context);
             JSONArray qaList = new JSONArray();
             for(int j = 0;j<qas.get(i).raw_clozes.size();j++){
                 JSONObject qa = new JSONObject();
@@ -100,6 +101,7 @@ public class ChineseQAGenerator {
                 qa.put("answer",qas.get(i).candidate_answers.get(j));
                 qa.put("start",qas.get(i).answer_index_pairs.get(j).start);
                 qa.put("end",qas.get(i).answer_index_pairs.get(j).end);
+                qa.put("id",id++);
                 qaList.add(qa);
             }
             c.put("qas",qaList);
@@ -110,12 +112,16 @@ public class ChineseQAGenerator {
         bw.write(all.toString());
     }
     public static void main(String[] args) throws Exception {
+        long startTime=System.currentTimeMillis();
         ChineseQAGenerator qag= new ChineseQAGenerator();
-        String outFileName = "qa-json";
-        String serializedClassifier = "E:\\Graduation-Project\\dataset\\stanford-ner-2016-10-31\\classifiers\\chinese.misc.distsim.crf.ser.gz";
+        String outFileName = "E:\\UnderGraduProject\\dataset\\qa-json";
+        String serializedClassifier = "E:\\UnderGraduProject\\dataset\\stanford-ner-2016-10-31\\classifiers\\chinese.misc.distsim.crf.ser.gz";
         AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
-        qag.readContexts("E:\\Graduation-Project\\dataset\\baidubaike-pop_star");
+        qag.readContexts("E:\\UnderGraduProject\\dataset\\baidubaike-pop_star");
         qag.generateQA(classifier);
         qag.write(outFileName);
+        long endTime=System.currentTimeMillis();
+        System.out.println("run time:"+(endTime-startTime)/1000+"s");
+
     }
 }
