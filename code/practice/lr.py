@@ -2,9 +2,15 @@ import collections
 import numpy as np
 import tensorflow as tf
 import matplotlib
+from pylab import *
+import json
+import nltk
+import translate
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+mpl.rcParams['font.sans-serif'] = ['SimHei']  
 # Configuration
 batch_size = 20
 # Dimension of the embedding vector. Two too small to get
@@ -13,18 +19,35 @@ embedding_size = 2
 num_sampled = 15    # Number of negative examples to sample.
 
 # Sample sentences
-sentences = ["the quick brown fox jumped over the lazy dog",
-            "I love cats and dogs",
-            "we all love cats and dogs",
-            "cats and dogs are great",
-            "sung likes cats",
-            "she loves dogs",
-            "cats can be very independent",
-            "cats are great companions when they want to be",
-            "cats are playful",
-            "cats are natural hunters",
-            "It's raining cats and dogs",
-            "dogs and cats love sung"]
+dataPath = 'E:\Graduation-Project\dataset\GraduData\SQuAD\\train-v1.1.json'
+trainJsonStr = open(dataPath,'r').read()
+trainDict = json.loads(trainJsonStr)
+trainData = trainDict['data']
+
+rawContext = ''
+for c in trainData:
+    title = c['title']
+    paras = c['paragraphs']
+    for para in paras:
+        context = para['context']
+        rawContext+=context
+        qas = para['qas']
+        for qa in qas:
+            question = qa['question']
+sentences = nltk.sent_tokenize(rawContext)
+print('finish sentence split...')
+# sentences = ["the quick brown fox jumped over the lazy dog",
+#             "I love cats and dogs",
+#             "we all love cats and dogs",
+#             "cats and dogs are great",
+#             "sung likes cats",
+#             "she loves dogs",
+#             "cats can be very independent",
+#             "cats are great companions when they want to be",
+#             "cats are playful",
+#             "cats are natural hunters",
+#             "It's raining cats and dogs",
+#             "dogs and cats love sung"]
 
 # sentences to words and count
 words = " ".join(sentences).split()
@@ -98,7 +121,7 @@ with tf.Session() as sess:
     # Initializing all variables
     tf.global_variables_initializer().run()
 
-    for step in range(100):
+    for step in range(200):
         batch_inputs, batch_labels = generate_batch(batch_size)
         _, loss_val = sess.run([train_op, loss],
                 feed_dict={train_inputs: batch_inputs, train_labels: batch_labels})
@@ -110,7 +133,9 @@ with tf.Session() as sess:
 
 # Show word2vec if dim is 2
 if trained_embeddings.shape[1] == 2:
-    labels = rdic[:10] # Show top 10 words
+    labels = rdic[:100] # Show top 10 words
+    labels = translate.translateAll(labels)
+    print(labels)
     for i, label in enumerate(labels):
         x, y = trained_embeddings[i,:]
         plt.scatter(x, y)
