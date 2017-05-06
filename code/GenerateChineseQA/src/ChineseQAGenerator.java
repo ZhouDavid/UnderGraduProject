@@ -86,6 +86,7 @@ public class ChineseQAGenerator {
         }
     }
 
+
     public void write(String fileName)throws FileNotFoundException,IOException{
         FileWriter fw  = new FileWriter(fileName);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -110,6 +111,14 @@ public class ChineseQAGenerator {
         JSONObject all = new JSONObject();
         all.put("data",cs);
         bw.write(all.toString());
+    }
+
+    public void writeForTranslation(){
+        for(int i = 0;i<qas.size();i++){
+            QA para = qas.get(i);
+            String context = para.context;
+            for(int j = 0;j<para.c)
+        }
     }
     public static void main(String[] args) throws Exception {
         long startTime=System.currentTimeMillis();
