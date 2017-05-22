@@ -1,9 +1,13 @@
 #coding: utf-8
 import tensorflow as tf
+import numpy as np
+def readVocTable(fileName):
+	content = open(fileName,'r')
 
-def CharacterEmbeddingLayer(contextSentences):
+def CharacterEmbeddingLayer(contextSentences,vocTable):
 	'''contextSentences: a list of word id'''
 	shape = contextSentences.get_shape()
+
 	
 	return 0
 
