@@ -1,5 +1,6 @@
 #coding:utf-8
 import json
+import os
 
 def extracTrainData(trainDataFileName):
 	articleNum = 100
@@ -23,11 +24,12 @@ def extractLineFile(lineFileName,lineNum):
 	extractLines = fileLines[:lineNum]
 	for i in range(len(extractLines)):
 		extractLines[i] = extractLines[i]
-	return extractLines
+	return extractLiness
 
 
 
 if __name__ == '__main__':
+	path = os.path.join('..','..','..','dataset','GraduData','Word2Vec','GoogleNews-vectors-negative300.bin')
 	trainDataFileName ='E:\Graduation-Project\dataset\GraduData\SQuAD\\train-v1.1.json' 
-	content = extractLineFile('one-hot',10)
-	open('small-one-hot','w',encoding='utf-8').writelines(content)
+	content = extractLineFile(path,10)
+	open('smallWord2Vec','w',encoding='utf-8').writelines(content)
