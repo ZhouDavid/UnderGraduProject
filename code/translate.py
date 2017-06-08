@@ -23,3 +23,7 @@ def translate(origin):
 	req = requests.get(url=url)
 	trans = req.text
 	return trans
+if __name__ == '__main__':
+	orignText = open('rnet-origin.txt','r',encoding='utf-8').read()
+	transText = translate(originText)
+	open('rnet-trans.txt','w').write(transText)
