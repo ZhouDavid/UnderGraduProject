@@ -3,6 +3,10 @@ import json
 import os
 
 def extracTrainData(trainDataFileName):
+	articleNum = 1000
+	content = open(trainDataFileName,'r').read()
+	
+def extracTrainData(trainDataFileName):
 	articleNum = 100
 	content = open(trainDataFileName,'r').read()
 	dataDict = json.loads(content)
